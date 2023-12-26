@@ -24,12 +24,13 @@ let min = document.getElementById('min')
 let max = document.getElementById('max')
 let speedWind = document.getElementById('speed')
 let visibility = document.getElementById('visibility')
+let timer = document.querySelector('#timer')
 
 
 // let geoloc = window.navigator.geolocation.getCurrentPosition(function succes(position){
 //    lat = position.coords.latitude//широта
 //    lon = position.coords.longitude//долгота
-//    city.textContent = `Широта ${lat} Долгота ${lon} ${weathers['name']} рассвет ${weathers['sys']['sunrise']}`//МЕСТОПОЛОЖЕНИЕ
+   
 // })
 
 
@@ -39,6 +40,7 @@ let visibility = document.getElementById('visibility')
 axios.get(url).then(res => {
     weathers = res.data
     console.log(weathers)
+    console.log()
 
 
     setInterval (function () {
@@ -46,9 +48,28 @@ axios.get(url).then(res => {
         let hours = time.getHours()
         let minut = time.getMinutes()
         let sec = time.getSeconds()
-       
-      
+    
 
+        //сколько часов осталось до заката
+        let timeHoursSunset = Math.floor( weathers['sys']['sunset']/60/60)-Math.floor(time.getTime()/1000/60/60)
+        //сколько минут осталось до заката
+        let timeMinutesSunset = Math.floor(weathers['sys']['sunset']/60)-Math.floor(time.getTime()/1000/60)
+        //время заката
+        let hoursSunset = time.getHours()+timeHoursSunset
+
+
+        let minutsSunset = timeMinutesSunset%60+time.getMinutes()
+
+
+        minutsSunset = minutsSunset>60?minutsSunset-59:minutsSunset
+        minutsSunset = minutsSunset<10?"0"+minutsSunset:minutsSunset
+      //   city.textContent =  `день длится ${Math.floor((weathers['sys']['sunset']-weathers['sys']['sunrise'])/60/60)} часов ${Math.floor((weathers['sys']['sunset']-weathers['sys']['sunrise'])/60-(Math.floor((weathers['sys']['sunset']-weathers['sys']['sunrise'])/60/60)*60))} мин`
+      //   timer.textContent=`до заката осталось${timeHoursSunset}часов : ${minutsSunset} минут`
+      //   if (timeHoursSunset>0){
+      //    console.log(true)
+      //   }
+      
+        timer.textContent = `закат в ${hoursSunset} : ${minutsSunset}`
       
         let objDiscription = {
          'overcast clouds':'пасмурнo',
@@ -63,9 +84,12 @@ axios.get(url).then(res => {
          'light shower sleet':'легкий дождь с мокрым снегом'
       }
        
+      
+  
+
        discription.textContent =objDiscription[ weathers['weather'][0]['description']]//ОБЛАЧНОСТЬ(берем данные из объекта objDiscription )
        temperatur.innerHTML = Math.floor(weathers['main']['temp'])+'<span>°C</span>'//ТЕМПЕРАТУРА
-       min.textContent = `min ${weathers['main']['temp_min']} °`
+       min.textContent = `min ${Math.floor(weathers['main']['temp_min'])} °`
        max.textContent = `max ${weathers['main']['temp_max']} °`
 
         hours = hours<10?"0"+hours:hours
@@ -112,7 +136,7 @@ axios.get(url).then(res => {
       
       
       // Смена дня и ночи
-        if(time.getHours()>=8 && (24-time.getHours())>=7){
+        if(time.getHours()>=8 && (24-time.getHours())>=9){
          body.classList.add('bg-den')
         }else{
          body.classList.add('bg-noch-zp')
