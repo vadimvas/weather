@@ -48,28 +48,41 @@ axios.get(url).then(res => {
         let hours = time.getHours()
         let minut = time.getMinutes()
         let sec = time.getSeconds()
-    
 
-        //сколько часов осталось до заката
-        let timeHoursSunset = Math.floor( weathers['sys']['sunset']/60/60)-Math.floor(time.getTime()/1000/60/60)
-        //сколько минут осталось до заката
-        let timeMinutesSunset = Math.floor(weathers['sys']['sunset']/60)-Math.floor(time.getTime()/1000/60)
-        //время заката
-        let hoursSunset = time.getHours()+timeHoursSunset
+      // начало дня
+        let startDat = new Date(time.getFullYear(),time.getMonth(),time.getDate())
+        let startDatGetTime = startDat.getTime()/1000
 
 
-        let minutsSunset = timeMinutesSunset%60+time.getMinutes()
+        let endtDat = new Date(time.getFullYear(),time.getMonth(),time.getDate()+1)
+        let endDatGetTime = endtDat.getTime()/1000
 
 
-        minutsSunset = minutsSunset>60?minutsSunset-59:minutsSunset
-        minutsSunset = minutsSunset<10?"0"+minutsSunset:minutsSunset
+        let timeSunrise = weathers['sys']['sunrise']//время рассвета в секундах
+        let timeSunset = weathers['sys']['sunset']//время заката в секундах
+        let timeDay = timeSunset-timeSunrise
+
+
+       //время рассвета
+        let hoursSunrise = Math.floor((timeSunrise - startDatGetTime)/60/60)
+        let minutsSunrise = Math.ceil((timeSunrise - startDatGetTime)/60)-hoursSunrise*60
+
+      //  время заката
+        let hoursSunset = Math.floor((timeSunset - startDatGetTime)/60/60)
+        let minutsSunset = Math.ceil((timeSunset - startDatGetTime)/60)-hoursSunset*60
+
+      // console.log(timeSunset-time.getTime()/1000>0)
+      
       //   city.textContent =  `день длится ${Math.floor((weathers['sys']['sunset']-weathers['sys']['sunrise'])/60/60)} часов ${Math.floor((weathers['sys']['sunset']-weathers['sys']['sunrise'])/60-(Math.floor((weathers['sys']['sunset']-weathers['sys']['sunrise'])/60/60)*60))} мин`
       //   timer.textContent=`до заката осталось${timeHoursSunset}часов : ${minutsSunset} минут`
       //   if (timeHoursSunset>0){
       //    console.log(true)
       //   }
       
-        timer.textContent = `закат в ${hoursSunset} : ${minutsSunset}`
+        timer.textContent = `рассвет в ${hoursSunrise} : ${minutsSunrise}`
+        city.textContent = `закат в ${hoursSunset} : ${minutsSunset}`
+        minutsSunset = minutsSunset<10?"0"+minutsSunset:minutsSunset
+        minutsSunrise = minutsSunrise<10?"0"+minutsSunrise:minutsSunrise
       
         let objDiscription = {
          'overcast clouds':'пасмурнo',
@@ -136,7 +149,7 @@ axios.get(url).then(res => {
       
       
       // Смена дня и ночи
-        if(time.getHours()>=8 && (24-time.getHours())>=9){
+        if(time.getHours()>=hoursSunrise && time.getHours()<hoursSunset){
          body.classList.add('bg-den')
         }else{
          body.classList.add('bg-noch-zp')

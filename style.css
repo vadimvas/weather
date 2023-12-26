@@ -94,9 +94,9 @@ body{
     object-fit: cover;
 }
 #city,#timer{
-    color: black;
-    padding-top: 20px;
-   font-weight: 700;
+    color: white;
+    padding-top: 5px;
+   
 }
 #discription{
     font-size: 30px;
