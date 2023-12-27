@@ -124,9 +124,12 @@ body{
         margin: auto;
     }
     #windspeed,#humidity,#pressure,#visibility{
-        margin-top: 10px;
+        margin-top: 5px;
     }
     #feels-like,#min,#max{
         padding-left: 10px;
+    }
+    #city,#timer{
+        font-size: 10px;
     }
 }

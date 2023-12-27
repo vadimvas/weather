@@ -49,29 +49,22 @@ axios.get(url).then(res => {
         let minut = time.getMinutes()
         let sec = time.getSeconds()
 
-      // начало дня
-        let startDat = new Date(time.getFullYear(),time.getMonth(),time.getDate())
-        let startDatGetTime = startDat.getTime()/1000
 
-
-        let endtDat = new Date(time.getFullYear(),time.getMonth(),time.getDate()+1)
-        let endDatGetTime = endtDat.getTime()/1000
-
-
-        let timeSunrise = weathers['sys']['sunrise']//время рассвета в секундах
-        let timeSunset = weathers['sys']['sunset']//время заката в секундах
-        let timeDay = timeSunset-timeSunrise
+        let r = new Date(weathers['sys']['sunrise']*1000)
+     
+        let z = new Date(weathers['sys']['sunset']*1000)
+      
 
 
        //время рассвета
-        let hoursSunrise = Math.floor((timeSunrise - startDatGetTime)/60/60)
-        let minutsSunrise = Math.ceil((timeSunrise - startDatGetTime)/60)-hoursSunrise*60
+        let hoursSunrise = r.getHours()
+        let minutsSunrise = r.getMinutes()
 
       //  время заката
-        let hoursSunset = Math.floor((timeSunset - startDatGetTime)/60/60)
-        let minutsSunset = Math.ceil((timeSunset - startDatGetTime)/60)-hoursSunset*60
+        let hoursSunset = z.getHours()
+        let minutsSunset = z.getMinutes()
 
-      // console.log(timeSunset-time.getTime()/1000>0)
+    
       
       //   city.textContent =  `день длится ${Math.floor((weathers['sys']['sunset']-weathers['sys']['sunrise'])/60/60)} часов ${Math.floor((weathers['sys']['sunset']-weathers['sys']['sunrise'])/60-(Math.floor((weathers['sys']['sunset']-weathers['sys']['sunrise'])/60/60)*60))} мин`
       //   timer.textContent=`до заката осталось${timeHoursSunset}часов : ${minutsSunset} минут`
@@ -86,24 +79,24 @@ axios.get(url).then(res => {
       
         let objDiscription = {
          'overcast clouds':'пасмурнo',
-         'broken clouds':'разорванные облака 51-84%',
-         'scattered clouds':'	рассеянные облака 25-50%',
-         'few clouds':'	мало облаков 11-25%',
-         'clear sky':'чистое небо',
-         'light snow':'легкий снег',
+         'broken clouds':'облачно',
+         'scattered clouds':'облачно',
+         'few clouds':'малооблачно',
+         'clear sky':'безоблачно',
+         'light snow':'небольшой снег',
          'snow':'снег',
          'heavy snow':'сильный снегопад',
          'sleet':'мокрый снег',
-         'light shower sleet':'легкий дождь с мокрым снегом'
+         'light shower sleet':'дождь с мокрым снегом'
       }
        
       
   
 
        discription.textContent =objDiscription[ weathers['weather'][0]['description']]//ОБЛАЧНОСТЬ(берем данные из объекта objDiscription )
-       temperatur.innerHTML = Math.floor(weathers['main']['temp'])+'<span>°C</span>'//ТЕМПЕРАТУРА
+       temperatur.innerHTML = Math.round(weathers['main']['temp'])+'<span>°C</span>'//ТЕМПЕРАТУРА
        min.textContent = `min ${Math.floor(weathers['main']['temp_min'])} °`
-       max.textContent = `max ${weathers['main']['temp_max']} °`
+       max.textContent = `max ${Math.ceil(weathers['main']['temp_max'])} °`
 
         hours = hours<10?"0"+hours:hours
         minut = minut<10?"0"+minut:minut
@@ -111,7 +104,7 @@ axios.get(url).then(res => {
         timenow.textContent = hours + ':' + minut + ':' + sec//ВРЕМЯ
         datenow.textContent = arrday[time.getDay()]+' , '+time.getDate()+' '+arrmonth[time.getMonth()]+' '+time.getFullYear()+' г.'//ДАТА
        
-        feels.textContent = 'ощущается как '+Math.floor(weathers['main']['feels_like'])
+        feels.textContent = 'ощущается как '+Math.round(weathers['main']['feels_like'])
         img.innerHTML = weathers['weather'][0]['id']
        
         iconWeather()
@@ -133,12 +126,11 @@ axios.get(url).then(res => {
          wind.textContent = `ветер: северо-западный `
         }
 
+        //скорость ветра
         speedWind.textContent = `${weathers['wind']['speed']} м/с`
 
 
 
-       
-      //   console.log(Math.floor(weathers['sys']['sunset']-time.getTime()/1000))
 
 
 
@@ -149,7 +141,7 @@ axios.get(url).then(res => {
       
       
       // Смена дня и ночи
-        if(time.getHours()>=hoursSunrise && time.getHours()<hoursSunset){
+        if(time.getTime()>=r.getTime() && time.getHours()<=z.getTime()){
          body.classList.add('bg-den')
         }else{
          body.classList.add('bg-noch-zp')
@@ -180,7 +172,7 @@ axios.get(url).then(res => {
 
 
 
-function iconWeather(){
+function iconWeather(){//выводит иконки погоды
 
         
     if (img.textContent=='200'|| img.textContent=='201'|| img.textContent=='202'){
