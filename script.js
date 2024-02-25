@@ -82,10 +82,10 @@ axios.get(url).then(res => {
       //    console.log(true)
       //   }
       
-        timer.textContent = `рассвет в ${hoursSunrise} : ${minutsSunrise}`
+      minutsSunset = minutsSunset<10?"0"+minutsSunset:minutsSunset
+      minutsSunrise = minutsSunrise<10?"0"+minutsSunrise:minutsSunrise
+      timer.textContent = `рассвет в ${hoursSunrise} : ${minutsSunrise}`
         city.textContent = `закат в ${hoursSunset} : ${minutsSunset}`
-        minutsSunset = minutsSunset<10?"0"+minutsSunset:minutsSunset
-        minutsSunrise = minutsSunrise<10?"0"+minutsSunrise:minutsSunrise
       
         let objDiscription = {
          'overcast clouds':'пасмурнo',
@@ -151,7 +151,7 @@ axios.get(url).then(res => {
       
       
       // Смена дня и ночи
-        if(time.getTime()>=r.getTime() && time.getHours()<=z.getTime()){
+        if(time.getTime()>=r.getTime() && time.getTime()<=z.getTime()){
          body.classList.add('bg-den')
         }else{
          body.classList.add('bg-noch-zp')
