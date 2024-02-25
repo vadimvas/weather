@@ -25,7 +25,17 @@ let max = document.getElementById('max')
 let speedWind = document.getElementById('speed')
 let visibility = document.getElementById('visibility')
 let timer = document.querySelector('#timer')
+let but1 = document.getElementById('but1')
+let but2 = document.getElementById('but2')
 
+
+
+but1.addEventListener('click',function(){
+   wrapper.classList.toggle('bg-dojd')
+})
+but2.addEventListener('click',function(){
+   wrapper.classList.toggle('bg-snow')
+})
 
 // let geoloc = window.navigator.geolocation.getCurrentPosition(function succes(position){
 //    lat = position.coords.latitude//широта

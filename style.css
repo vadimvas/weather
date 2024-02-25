@@ -18,6 +18,18 @@ body{
     align-items: center;
 
 }
+#but1{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+
+}
+#but2{
+    position: absolute;
+    top: 20px;
+    left: 90px;
+    
+}
 
 .bg-den{
     background-image: url(./denzp.jpg);
